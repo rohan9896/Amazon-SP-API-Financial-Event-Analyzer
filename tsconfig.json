@@ -1,0 +1,10 @@
+{
+  "extends": "./sp-api-service/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "./sp-api-service/src",
+    "outDir": "./sp-api-service/dist"
+  },
+  "include": ["sp-api-service/src/**/*.ts"],
+  "exclude": ["sp-api-service/node_modules", "sp-api-service/dist"]
+}

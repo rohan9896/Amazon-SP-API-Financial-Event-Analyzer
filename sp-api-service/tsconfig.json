@@ -11,6 +11,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
+    "types": ["node"],
+    "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true

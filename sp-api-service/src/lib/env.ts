@@ -11,11 +11,17 @@ const envSchema = z.object({
   ACCESS_TOKEN_TTL_SECONDS: z.coerce.number().int().positive().default(3600),
 });
 
-const parsed = envSchema.safeParse(process.env);
+export type Env = z.infer<typeof envSchema>;
 
-if (!parsed.success) {
-  console.error('Invalid environment variables:', parsed.error.flatten().fieldErrors);
-  process.exit(1);
+function loadEnv(): Env {
+  const parsed = envSchema.safeParse(process.env);
+
+  if (!parsed.success) {
+    console.error('Invalid environment variables:', parsed.error.flatten().fieldErrors);
+    process.exit(1);
+  }
+
+  return parsed.data;
 }
 
-export const env = parsed.data;
+export const env = loadEnv();
