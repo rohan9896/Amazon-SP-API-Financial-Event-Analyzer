@@ -2,3 +2,4 @@ packages:
   - 'sp-api-service'
   - 'reconciliation-engine'
   - 'reconciliation-api'
+  - 'frontend'

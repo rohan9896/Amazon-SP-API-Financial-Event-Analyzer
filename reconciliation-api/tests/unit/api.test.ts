@@ -77,6 +77,9 @@ describe('POST /api/explain/:orderId', () => {
     const body = await res.json();
     expect(body.orderId).toBe('444-5678901-2345678');
     expect(body.headline).toBe(validBody.headline);
+    expect(body.calculation).toBeDefined();
+    expect(body.calculation.formulas.discrepancy).toContain('actualSettled');
+    expect(body.calculation.discrepancy.value).toBe(-110.97);
   });
 
   it('returns 404 for an unknown order', async () => {

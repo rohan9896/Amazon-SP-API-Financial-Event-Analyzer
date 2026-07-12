@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+import type { ReconciliationConfig, ReconciliationOrder } from '../domain/types.js';
+import type { CalculationBreakdown, CalculationLine } from './breakdown.js';
+
 /**
  * Structured, seller-facing explanation of a single reconciliation record.
  * The LLM narrates numbers the engine already computed — it must not do its own math.
@@ -17,6 +20,8 @@ export type SellerExplanationBody = z.infer<typeof sellerExplanationSchema>;
 
 export type SellerExplanation = SellerExplanationBody & {
   orderId: string;
+  /** Deterministic math breakdown — computed in code, not by the LLM. */
+  calculation: CalculationBreakdown;
 };
 
 /**
@@ -36,3 +41,10 @@ export type ExplanationContext = {
 export type ExplanationProvider = {
   generate(context: ExplanationContext): Promise<SellerExplanationBody>;
 };
+
+export type ExplainOptions = {
+  order?: ReconciliationOrder;
+  config?: ReconciliationConfig;
+};
+
+export type { CalculationBreakdown, CalculationLine };

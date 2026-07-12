@@ -8,13 +8,14 @@ A plain-English walkthrough of what this project does, how the pieces fit togeth
 
 Amazon pays sellers *after* it takes out fees, processes refunds, handles chargebacks, and applies reimbursements. Because of this, the money that lands in a seller's account (**actual settled**) is rarely what they'd naively expect from the order (**expected revenue**). The **Reconciliation Engine** takes a seller's orders and their financial events, lines them up by order, computes what *should* have been paid vs. what *was* paid, and **flags the orders where the numbers don't add up** — so a human can chase the money that's missing.
 
-This repo has **three independent pieces**:
+This repo has **four independent pieces**:
 
 | Piece | What it is | Directory |
 |---|---|---|
 | **Mock SP-API service** | A fake version of Amazon's Selling Partner API. Serves orders + financial events over HTTP, with auth, pagination, and rate limiting — just like the real thing. | `sp-api-service/` |
 | **Reconciliation Engine** | The "brain." Pulls data from the mock (or real) API, normalizes it, and runs the reconciliation logic. Its core is a pure function with no network dependency. | `reconciliation-engine/` |
 | **Reconciliation API** | The consumer-facing HTTP API. Wraps the engine and exposes orders, finances, the reconciliation report, and on-demand explanations for a browser SPA. | `reconciliation-api/` |
+| **Frontend** | Minimal React dashboard (sidebar: Orders, Finances, Reconciliation + Explain). | `frontend/` |
 
 They are deliberately decoupled: the engine's core doesn't know or care whether data came from the mock or the real Amazon API, and the API layer adds no business logic — only transport.
 
@@ -460,6 +461,14 @@ curl localhost:4000/api/reconcile
 curl -X POST localhost:4000/api/explain/444-5678901-2345678
 ```
 
+Or open the React dashboard (with the mock and product API still running):
+
+```bash
+# Terminal 3 — SPA
+cd frontend
+pnpm dev                     # http://localhost:5173 (proxies /api → :4000)
+```
+
 Run just the pure logic (no server needed):
 
 ```bash
@@ -505,6 +514,8 @@ The `reconciliation-api` package has its own `.env` (see `reconciliation-api/.en
 | Cached fetch+normalize+reconcile | `reconciliation-api/src/lib/data-source.ts` |
 | API server entry | `reconciliation-api/src/index.ts` |
 | Product API reference | `reconciliation-api/API.md` |
+| Frontend SPA | `frontend/` |
+| Frontend story | `stories/0007-frontend-dashboard.md` |
 | Mock API endpoint reference | `sp-api-service/API.md` |
 | Reconciliation design & rule rationale | `stories/0004-reconciliation-engine.md` |
 | LLM explanation design | `stories/0005-llm-seller-explanations.md` |

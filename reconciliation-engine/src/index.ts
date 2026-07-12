@@ -9,6 +9,7 @@ export {
   detectMissingReimbursement,
 } from './rules/index.js';
 export { buildExplanationContext } from './explain/context.js';
+export { buildCalculationBreakdown } from './explain/breakdown.js';
 export { explainRecord, explainReport } from './explain/explain.js';
 export { GeminiClient } from './explain/gemini-client.js';
 export {
@@ -17,6 +18,9 @@ export {
   type SellerExplanationBody,
   type ExplanationContext,
   type ExplanationProvider,
+  type ExplainOptions,
+  type CalculationBreakdown,
+  type CalculationLine,
 } from './explain/types.js';
 export {
   SpApiClient,

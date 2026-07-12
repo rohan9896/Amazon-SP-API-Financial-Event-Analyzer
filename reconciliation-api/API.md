@@ -351,19 +351,64 @@ No request body. The server looks up the order in the cached reconciliation repo
 
 #### Response — 200 OK
 
+Narrative fields come from Gemini. The `calculation` object is **computed in code** (not by the LLM) so formulas and amounts are always exact.
+
 ```json
 {
   "orderId": "444-5678901-2345678",
   "headline": "Payment discrepancy detected for order 444-5678901-2345678",
   "summary": "Your order resulted in a total discrepancy of -110.97 compared to your expected revenue of 101.97.",
-  "reason": "This order is flagged for a shortpay, meaning the principal amount settled was lower than expected. Specifically, you were underpaid by 90.00 regarding the product principal.",
-  "evidence": [
-    "Expected revenue was 101.97, but the actual settled amount was -9.",
-    "A Chargeback event of -29.97 was applied to this order.",
-    "The principal amount for SKU ACCESSORY-004 was 29.97, offset by commission and fulfillment fees of -4.5 each."
-  ],
-  "recommendedAction": "Please review the chargeback details in your Seller Central reports. If you believe the chargeback or the shortpay is incorrect, you may want to open a case with Amazon Seller Support for further investigation.",
-  "confidence": "high"
+  "reason": "This order is flagged for a shortpay...",
+  "evidence": ["..."],
+  "recommendedAction": "Please review the chargeback details...",
+  "confidence": "high",
+  "calculation": {
+    "formulas": {
+      "expectedRevenue": "itemSubtotal + shippingTotal + taxTotal − (itemSubtotal × 0.15)",
+      "actualSettled": "Σ(financeLine.amount for all lines joined to the order)",
+      "discrepancy": "actualSettled − expectedRevenue",
+      "principalGap": "Σ(Principal amounts) − Σ(itemPrice)"
+    },
+    "expected": {
+      "commissionRate": 0.15,
+      "itemSubtotal": 119.97,
+      "shippingTotal": 0,
+      "taxTotal": 0,
+      "commissionFee": 18,
+      "expectedRevenue": 101.97,
+      "steps": [
+        "Item subtotal (Σ itemPrice) = $119.97",
+        "Commission fee = itemSubtotal × 0.15 = $18.00",
+        "expectedRevenue = $119.97 + $0.00 + $0.00 − $18.00 = $101.97"
+      ]
+    },
+    "actual": {
+      "lines": [
+        { "label": "Shipment · Principal", "lineType": "Principal", "amount": 29.97 },
+        { "label": "Shipment · Commission", "lineType": "Commission", "amount": -4.5 },
+        { "label": "Chargeback · Chargeback", "lineType": "Chargeback", "amount": -29.97 }
+      ],
+      "credits": 29.97,
+      "debits": -34.47,
+      "actualSettled": -9,
+      "steps": ["..."]
+    },
+    "discrepancy": {
+      "value": -110.97,
+      "meaning": "underpaid",
+      "steps": [
+        "discrepancy = actualSettled − expectedRevenue = $-9.00 − $101.97 = $-110.97"
+      ]
+    },
+    "principal": {
+      "expectedPrincipal": 119.97,
+      "actualPrincipal": 29.97,
+      "principalGap": -90,
+      "shortpayTolerance": 0.5,
+      "shortpayTriggered": true,
+      "steps": ["..."]
+    }
+  }
 }
 ```
 
@@ -467,9 +512,17 @@ Returned when `GEMINI_API_KEY` is not configured on the server. Reconciliation s
   evidence: string[];
   recommendedAction: string;
   confidence: "high" | "medium" | "low";
+  calculation: {
+    formulas: { expectedRevenue; actualSettled; discrepancy; principalGap };
+    expected: { itemSubtotal, shippingTotal, taxTotal, commissionFee, expectedRevenue, steps[] };
+    actual: { lines[], credits, debits, actualSettled, steps[] };
+    discrepancy: { value, meaning, steps[] };
+    principal: { expectedPrincipal, actualPrincipal, principalGap, shortpayTriggered, steps[] };
+  };
 }
 ```
 
+`calculation` is always attached by the server (deterministic). Narrative fields come from Gemini.
 ---
 
 ## Error reference
