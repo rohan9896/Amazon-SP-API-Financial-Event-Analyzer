@@ -18,3 +18,8 @@ export {
   type ExplanationContext,
   type ExplanationProvider,
 } from './explain/types.js';
+export {
+  SpApiClient,
+  type SpApiClientConfig,
+  type SpApiFetchedData,
+} from './client/sp-api-client.js';

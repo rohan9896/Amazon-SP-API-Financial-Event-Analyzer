@@ -8,14 +8,15 @@ A plain-English walkthrough of what this project does, how the pieces fit togeth
 
 Amazon pays sellers *after* it takes out fees, processes refunds, handles chargebacks, and applies reimbursements. Because of this, the money that lands in a seller's account (**actual settled**) is rarely what they'd naively expect from the order (**expected revenue**). The **Reconciliation Engine** takes a seller's orders and their financial events, lines them up by order, computes what *should* have been paid vs. what *was* paid, and **flags the orders where the numbers don't add up** — so a human can chase the money that's missing.
 
-This repo has **two independent pieces**:
+This repo has **three independent pieces**:
 
 | Piece | What it is | Directory |
 |---|---|---|
 | **Mock SP-API service** | A fake version of Amazon's Selling Partner API. Serves orders + financial events over HTTP, with auth, pagination, and rate limiting — just like the real thing. | `sp-api-service/` |
 | **Reconciliation Engine** | The "brain." Pulls data from the mock (or real) API, normalizes it, and runs the reconciliation logic. Its core is a pure function with no network dependency. | `reconciliation-engine/` |
+| **Reconciliation API** | The consumer-facing HTTP API. Wraps the engine and exposes orders, finances, the reconciliation report, and on-demand explanations for a browser SPA. | `reconciliation-api/` |
 
-They are deliberately decoupled: the engine's core doesn't know or care whether data came from the mock or the real Amazon API.
+They are deliberately decoupled: the engine's core doesn't know or care whether data came from the mock or the real Amazon API, and the API layer adds no business logic — only transport.
 
 On top of these sits an **optional LLM explanation layer** (Google Gemini) that turns each machine-readable reconciliation record into a plain-English explanation a seller can actually read. It never changes the math — it only narrates numbers the engine already produced. See [Section 9](#9-seller-explanations-llm-layer).
 
@@ -368,7 +369,36 @@ By default only **flagged** orders are explained (that's what a seller cares abo
 
 ---
 
-## 10. Worked examples (from the real seed data)
+## 10. Serving it over HTTP (the API layer)
+
+Everything above is a library + CLI. The `reconciliation-api` package (`reconciliation-api/`) wraps the engine in a small Hono HTTP server so a browser SPA can consume it. It adds no business logic — it fetches via the engine's `SpApiClient`, normalizes, reconciles, and serves JSON.
+
+```mermaid
+flowchart LR
+    spa["React SPA (future)"] -->|"HTTP + CORS"| api["reconciliation-api (:4000)"]
+    api --> engine["reconciliation-engine (imported)"]
+    engine -->|"SpApiClient"| mock["sp-api-service (:3000)"]
+    engine -->|"GeminiClient"| gemini["Gemini 3.1 Flash-Lite"]
+```
+
+### Endpoints
+
+| Method | Path | Returns |
+|---|---|---|
+| `GET` | `/health` | liveness |
+| `GET` | `/api/orders` | normalized orders + warnings |
+| `GET` | `/api/finances` | normalized finance lines |
+| `GET` | `/api/reconcile` | the `ReconciliationRecord[]` report (`?refresh=true` bypasses cache) |
+| `POST` | `/api/explain/:orderId` | a `SellerExplanation` for one order |
+
+### Two design choices worth knowing
+
+- **Reconcile and explain are separate endpoints.** `/api/reconcile` is fast and deterministic, so the SPA's table renders immediately. The slow, paid Gemini call only happens when a seller clicks to explain a specific order. Failures stay loud: `404` for an unknown order, `502` if Gemini fails, `503` if no `GEMINI_API_KEY` is configured — never a fabricated explanation.
+- **A short-TTL cache** (`DATA_CACHE_TTL_MS`, default 30s) holds the fetched + normalized + reconciled dataset in memory, so the four endpoints don't each re-hit the rate-limited mock, and so `explain` has a record to narrate. Concurrent requests during a refresh are de-duplicated into a single upstream fetch.
+
+---
+
+## 11. Worked examples (from the real seed data)
 
 ### A clean order — no flag
 Product $46.48 expected, Amazon settles Principal + normal commission/FBA fees so `actualSettled ≈ expectedRevenue`. `discrepancy` is within tolerance, no Principal gap → **no flags**.
@@ -387,7 +417,7 @@ An order returned by the Orders API whose `orderId`/SKUs match **nothing** in th
 
 ---
 
-## 11. Edge cases & assumptions (know these before a demo)
+## 12. Edge cases & assumptions (know these before a demo)
 
 - **Flat 15% commission** — not category-specific. Documented simplification.
 - **Principal-level shortpay** — deliberately narrower than the whole discrepancy, to avoid false positives from legitimate fees. Fee/chargeback-driven losses (e.g. orders `666`, `888`) show a negative `discrepancy` but are **not** shortpay, because their loss isn't in the Principal lines. Those are Phase-2 territory (`unexplained_fee`).
@@ -401,7 +431,7 @@ An order returned by the Orders API whose `orderId`/SKUs match **nothing** in th
 
 ---
 
-## 12. How to run it end-to-end
+## 13. How to run it end-to-end
 
 ```bash
 # Terminal 1 — start the mock Amazon API
@@ -416,6 +446,18 @@ pnpm reconcile -- --output report.json   # or write it to a file
 
 # Optional — narrate flagged orders in plain English (needs GEMINI_API_KEY)
 pnpm explain                 # explains flagged orders from report.json
+```
+
+Or serve it over HTTP for a frontend (with the mock still running in Terminal 1):
+
+```bash
+# Terminal 2 — the product API
+cd reconciliation-api
+cp .env.example .env         # set matching SP-API creds (+ GEMINI_API_KEY for explanations)
+pnpm dev                     # serves on http://localhost:4000 (builds the engine first)
+
+curl localhost:4000/api/reconcile
+curl -X POST localhost:4000/api/explain/444-5678901-2345678
 ```
 
 Run just the pure logic (no server needed):
@@ -437,9 +479,11 @@ pnpm test                    # unit tests exercise reconcile() and the explain l
 | `GEMINI_API_KEY` | *(none)* | Google Gemini key for the explanation layer. Kept separate from SP-API creds; only needed for `pnpm explain` |
 | `GEMINI_MODEL` | `gemini-3.1-flash-lite` | Which Gemini model the explanation layer uses |
 
+The `reconciliation-api` package has its own `.env` (see `reconciliation-api/.env.example`) with the same knobs plus `PORT`, `CORS_ORIGIN`, and `DATA_CACHE_TTL_MS`.
+
 ---
 
-## 13. Where things live (quick map)
+## 14. Where things live (quick map)
 
 | Concern | File |
 |---|---|
@@ -457,6 +501,11 @@ pnpm test                    # unit tests exercise reconcile() and the explain l
 | Gemini client (structured output) | `reconciliation-engine/src/explain/gemini-client.ts` |
 | Explanation orchestration + types | `reconciliation-engine/src/explain/explain.ts`, `explain/types.ts` |
 | Explanation CLI (`pnpm explain`) | `reconciliation-engine/src/cli/explain.ts` |
+| HTTP API app + routes | `reconciliation-api/src/app.ts`, `reconciliation-api/src/routes/*.ts` |
+| Cached fetch+normalize+reconcile | `reconciliation-api/src/lib/data-source.ts` |
+| API server entry | `reconciliation-api/src/index.ts` |
+| Product API reference | `reconciliation-api/API.md` |
 | Mock API endpoint reference | `sp-api-service/API.md` |
 | Reconciliation design & rule rationale | `stories/0004-reconciliation-engine.md` |
 | LLM explanation design | `stories/0005-llm-seller-explanations.md` |
+| Reconciliation API design | `stories/0006-reconciliation-api.md` |
