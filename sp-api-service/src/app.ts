@@ -4,6 +4,7 @@ import { logger } from 'hono/logger';
 import { errorHandler } from './middlewares/error-handler.js';
 import { authRoutes } from './routes/auth.js';
 import { exampleRoutes } from './routes/example.js';
+import { financesRoutes } from './routes/finances.js';
 import { healthRoutes } from './routes/health.js';
 
 export const app = new Hono();
@@ -12,6 +13,7 @@ app.use('*', logger());
 app.onError(errorHandler);
 
 app.route('/auth', authRoutes);
+app.route('/finances', financesRoutes);
 app.route('/health', healthRoutes);
 app.route('/example', exampleRoutes);
 
