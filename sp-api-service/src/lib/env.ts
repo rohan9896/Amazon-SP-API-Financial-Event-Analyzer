@@ -9,6 +9,8 @@ const envSchema = z.object({
   CLIENT_SECRET: z.string().min(1).default('mock_client_secret'),
   MOCK_REFRESH_TOKEN: z.string().min(1).default('Atzr|mock_refresh_token'),
   ACCESS_TOKEN_TTL_SECONDS: z.coerce.number().int().positive().default(3600),
+  ORDERS_RATE_LIMIT_THRESHOLD: z.coerce.number().int().positive().default(5),
+  ORDERS_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(10000),
 });
 
 export type Env = z.infer<typeof envSchema>;

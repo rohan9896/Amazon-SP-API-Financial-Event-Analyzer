@@ -140,6 +140,8 @@ The mock service should support:
 
 This allows the analyzer app to demonstrate production-like integration behavior without requiring real Amazon credentials.
 
+**Note on PII/buyer data:** the real SP-API restricts buyer/PII fields (name, address, email) behind a Restricted Data Token (RDT) obtained via the Tokens API. This mock does not implement RDT or simulate buyer/PII data — it is out of scope for this project. All mock Orders/Finances data is seller-facing and non-personal (SKUs, prices, statuses).
+
 ---
 
 ### 2. Financial Event Ingestion
