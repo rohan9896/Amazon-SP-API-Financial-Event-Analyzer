@@ -153,7 +153,7 @@ Same shape as `client_credentials` response — a fresh `access_token` with a ne
 
 Mirrors Amazon SP-API `GET /orders/v0/orders` and `GET /orders/v0/orders/{orderId}/orderItems`.
 
-**Rate limiting (NF-2):** Both endpoints share a sliding-window counter. After `ORDERS_RATE_LIMIT_THRESHOLD` requests within `ORDERS_RATE_LIMIT_WINDOW_MS` milliseconds, subsequent requests return `429`. Defaults: 5 requests / 10 seconds.
+**Rate limiting (NF-2):** Both endpoints share a sliding-window counter. After `ORDERS_RATE_LIMIT_THRESHOLD` requests within `ORDERS_RATE_LIMIT_WINDOW_MS` milliseconds, subsequent requests return `429`. Defaults: 5 requests / 10 seconds. A `429` response includes a `Retry-After` header (seconds until a slot frees) so clients can back off precisely — clients that fan out across many orders (e.g. the reconciliation engine) must honor it.
 
 **Response headers on success:**
 

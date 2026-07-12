@@ -1,0 +1,666 @@
+[
+  {
+    "orderId": "111-2345678-9012345",
+    "expectedRevenue": 84.14,
+    "actualSettled": 104.38,
+    "discrepancy": 20.24,
+    "flags": [],
+    "flagMessages": [],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-05-28T10:15:00.000Z:111-2345678-9012345:Principal:0",
+        "orderId": "111-2345678-9012345",
+        "sellerSKU": "WIDGET-PRO-001",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 89.99,
+        "currency": "USD",
+        "postedDate": "2026-05-28T10:15:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-05-28T10:15:00.000Z:111-2345678-9012345:Tax:1",
+        "orderId": "111-2345678-9012345",
+        "sellerSKU": "WIDGET-PRO-001",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Tax",
+        "amount": 7.65,
+        "currency": "USD",
+        "postedDate": "2026-05-28T10:15:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-05-28T10:15:00.000Z:111-2345678-9012345:Commission:0",
+        "orderId": "111-2345678-9012345",
+        "sellerSKU": "WIDGET-PRO-001",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -13.5,
+        "currency": "USD",
+        "postedDate": "2026-05-28T10:15:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-05-28T10:15:00.000Z:111-2345678-9012345:FBAPerUnitFulfillmentFee:1",
+        "orderId": "111-2345678-9012345",
+        "sellerSKU": "WIDGET-PRO-001",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -4.75,
+        "currency": "USD",
+        "postedDate": "2026-05-28T10:15:00.000Z"
+      },
+      {
+        "eventId": "AdjustmentEventList:2026-06-09T12:00:00.000Z:WIDGET-PRO-001:FBAInventoryReimbursement:0",
+        "eventCategory": "AdjustmentEventList",
+        "lineType": "FBAInventoryReimbursement",
+        "amount": 24.99,
+        "currency": "USD",
+        "postedDate": "2026-06-09T12:00:00.000Z",
+        "sellerSKU": "WIDGET-PRO-001"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "222-3456789-0123456",
+    "expectedRevenue": 42.48,
+    "actualSettled": -10.95,
+    "discrepancy": -53.43,
+    "flags": [
+      "shortpay"
+    ],
+    "flagMessages": [
+      "Underpaid by $24.99"
+    ],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-05-31T14:30:00.000Z:222-3456789-0123456:Principal:0",
+        "orderId": "222-3456789-0123456",
+        "sellerSKU": "GADGET-BASIC-002",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 49.98,
+        "currency": "USD",
+        "postedDate": "2026-05-31T14:30:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-05-31T14:30:00.000Z:222-3456789-0123456:Commission:0",
+        "orderId": "222-3456789-0123456",
+        "sellerSKU": "GADGET-BASIC-002",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -7.5,
+        "currency": "USD",
+        "postedDate": "2026-05-31T14:30:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-05-31T14:30:00.000Z:222-3456789-0123456:FBAPerUnitFulfillmentFee:1",
+        "orderId": "222-3456789-0123456",
+        "sellerSKU": "GADGET-BASIC-002",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -6.2,
+        "currency": "USD",
+        "postedDate": "2026-05-31T14:30:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-05-31T14:30:00.000Z:222-3456789-0123456:ShippingChargeback:2",
+        "orderId": "222-3456789-0123456",
+        "sellerSKU": "GADGET-BASIC-002",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "ShippingChargeback",
+        "amount": -3.99,
+        "currency": "USD",
+        "postedDate": "2026-05-31T14:30:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-02T10:00:00.000Z:222-3456789-0123456:Principal:0",
+        "orderId": "222-3456789-0123456",
+        "sellerSKU": "GADGET-BASIC-002",
+        "eventCategory": "RefundEventList",
+        "lineType": "Principal",
+        "amount": -24.99,
+        "currency": "USD",
+        "postedDate": "2026-06-02T10:00:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-02T10:00:00.000Z:222-3456789-0123456:Commission:0",
+        "orderId": "222-3456789-0123456",
+        "sellerSKU": "GADGET-BASIC-002",
+        "eventCategory": "RefundEventList",
+        "lineType": "Commission",
+        "amount": 3.75,
+        "currency": "USD",
+        "postedDate": "2026-06-02T10:00:00.000Z"
+      },
+      {
+        "eventId": "AdjustmentEventList:2026-06-01T09:30:00.000Z:GADGET-BASIC-002:MiscAdjustment:0",
+        "eventCategory": "AdjustmentEventList",
+        "lineType": "MiscAdjustment",
+        "amount": -22,
+        "currency": "USD",
+        "postedDate": "2026-06-01T09:30:00.000Z",
+        "sellerSKU": "GADGET-BASIC-002"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "333-4567890-1234567",
+    "expectedRevenue": 140.24,
+    "actualSettled": -157.04,
+    "discrepancy": -297.28,
+    "flags": [
+      "shortpay"
+    ],
+    "flagMessages": [
+      "Underpaid by $149.99"
+    ],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-06-04T09:00:00.000Z:333-4567890-1234567:Principal:0",
+        "orderId": "333-4567890-1234567",
+        "sellerSKU": "PREMIUM-KIT-003",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 149.99,
+        "currency": "USD",
+        "postedDate": "2026-06-04T09:00:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-04T09:00:00.000Z:333-4567890-1234567:Tax:1",
+        "orderId": "333-4567890-1234567",
+        "sellerSKU": "PREMIUM-KIT-003",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Tax",
+        "amount": 12.75,
+        "currency": "USD",
+        "postedDate": "2026-06-04T09:00:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-04T09:00:00.000Z:333-4567890-1234567:Commission:0",
+        "orderId": "333-4567890-1234567",
+        "sellerSKU": "PREMIUM-KIT-003",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -22.5,
+        "currency": "USD",
+        "postedDate": "2026-06-04T09:00:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-04T09:00:00.000Z:333-4567890-1234567:FBAPerUnitFulfillmentFee:1",
+        "orderId": "333-4567890-1234567",
+        "sellerSKU": "PREMIUM-KIT-003",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -5.25,
+        "currency": "USD",
+        "postedDate": "2026-06-04T09:00:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-04T09:00:00.000Z:333-4567890-1234567:VariableClosingFee:2",
+        "orderId": "333-4567890-1234567",
+        "sellerSKU": "PREMIUM-KIT-003",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "VariableClosingFee",
+        "amount": -1.8,
+        "currency": "USD",
+        "postedDate": "2026-06-04T09:00:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-05T11:00:00.000Z:333-4567890-1234567:Principal:0",
+        "orderId": "333-4567890-1234567",
+        "sellerSKU": "PREMIUM-KIT-003",
+        "eventCategory": "RefundEventList",
+        "lineType": "Principal",
+        "amount": -149.99,
+        "currency": "USD",
+        "postedDate": "2026-06-05T11:00:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-05T11:00:00.000Z:333-4567890-1234567:Tax:1",
+        "orderId": "333-4567890-1234567",
+        "sellerSKU": "PREMIUM-KIT-003",
+        "eventCategory": "RefundEventList",
+        "lineType": "Tax",
+        "amount": -12.75,
+        "currency": "USD",
+        "postedDate": "2026-06-05T11:00:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-05T11:00:00.000Z:333-4567890-1234567:Commission:0",
+        "orderId": "333-4567890-1234567",
+        "sellerSKU": "PREMIUM-KIT-003",
+        "eventCategory": "RefundEventList",
+        "lineType": "Commission",
+        "amount": 22.5,
+        "currency": "USD",
+        "postedDate": "2026-06-05T11:00:00.000Z"
+      },
+      {
+        "eventId": "GuaranteeClaimEventList:2026-06-08T09:00:00.000Z:333-4567890-1234567:GuaranteeClaim:0",
+        "orderId": "333-4567890-1234567",
+        "eventCategory": "GuaranteeClaimEventList",
+        "lineType": "GuaranteeClaim",
+        "amount": -149.99,
+        "currency": "USD",
+        "postedDate": "2026-06-08T09:00:00.000Z"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "444-5678901-2345678",
+    "expectedRevenue": 101.97,
+    "actualSettled": -9,
+    "discrepancy": -110.97,
+    "flags": [
+      "shortpay"
+    ],
+    "flagMessages": [
+      "Underpaid by $90.00"
+    ],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-06-07T16:45:00.000Z:444-5678901-2345678:Principal:0",
+        "orderId": "444-5678901-2345678",
+        "sellerSKU": "ACCESSORY-004",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 29.97,
+        "currency": "USD",
+        "postedDate": "2026-06-07T16:45:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-07T16:45:00.000Z:444-5678901-2345678:Commission:0",
+        "orderId": "444-5678901-2345678",
+        "sellerSKU": "ACCESSORY-004",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -4.5,
+        "currency": "USD",
+        "postedDate": "2026-06-07T16:45:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-07T16:45:00.000Z:444-5678901-2345678:FBAPerUnitFulfillmentFee:1",
+        "orderId": "444-5678901-2345678",
+        "sellerSKU": "ACCESSORY-004",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -4.5,
+        "currency": "USD",
+        "postedDate": "2026-06-07T16:45:00.000Z"
+      },
+      {
+        "eventId": "ChargebackEventList:2026-06-10T13:30:00.000Z:444-5678901-2345678:Chargeback:0",
+        "orderId": "444-5678901-2345678",
+        "eventCategory": "ChargebackEventList",
+        "lineType": "Chargeback",
+        "amount": -29.97,
+        "currency": "USD",
+        "postedDate": "2026-06-10T13:30:00.000Z"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "555-6789012-3456789",
+    "expectedRevenue": 184.02,
+    "actualSettled": 28,
+    "discrepancy": -156.02,
+    "flags": [
+      "shortpay"
+    ],
+    "flagMessages": [
+      "Underpaid by $214.99"
+    ],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-06-12T11:20:00.000Z:555-6789012-3456789:Principal:0",
+        "orderId": "555-6789012-3456789",
+        "sellerSKU": "BUNDLE-005",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 199.99,
+        "currency": "USD",
+        "postedDate": "2026-06-12T11:20:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-12T11:20:00.000Z:555-6789012-3456789:Commission:0",
+        "orderId": "555-6789012-3456789",
+        "sellerSKU": "BUNDLE-005",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -30,
+        "currency": "USD",
+        "postedDate": "2026-06-12T11:20:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-12T11:20:00.000Z:555-6789012-3456789:FBAPerUnitFulfillmentFee:1",
+        "orderId": "555-6789012-3456789",
+        "sellerSKU": "BUNDLE-005",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -6.5,
+        "currency": "USD",
+        "postedDate": "2026-06-12T11:20:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-14T14:15:00.000Z:555-6789012-3456789:Principal:0",
+        "orderId": "555-6789012-3456789",
+        "sellerSKU": "BUNDLE-005",
+        "eventCategory": "RefundEventList",
+        "lineType": "Principal",
+        "amount": -199.99,
+        "currency": "USD",
+        "postedDate": "2026-06-14T14:15:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-14T14:15:00.000Z:555-6789012-3456789:Tax:1",
+        "orderId": "555-6789012-3456789",
+        "sellerSKU": "BUNDLE-005",
+        "eventCategory": "RefundEventList",
+        "lineType": "Tax",
+        "amount": -17,
+        "currency": "USD",
+        "postedDate": "2026-06-14T14:15:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-14T14:15:00.000Z:555-6789012-3456789:Commission:0",
+        "orderId": "555-6789012-3456789",
+        "sellerSKU": "BUNDLE-005",
+        "eventCategory": "RefundEventList",
+        "lineType": "Commission",
+        "amount": 30,
+        "currency": "USD",
+        "postedDate": "2026-06-14T14:15:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-14T14:15:00.000Z:555-6789012-3456789:FBAPerUnitFulfillmentFee:1",
+        "orderId": "555-6789012-3456789",
+        "sellerSKU": "BUNDLE-005",
+        "eventCategory": "RefundEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": 6.5,
+        "currency": "USD",
+        "postedDate": "2026-06-14T14:15:00.000Z"
+      },
+      {
+        "eventId": "AdjustmentEventList:2026-07-06T10:30:00.000Z:BUNDLE-005:FBAInventoryReimbursement:0",
+        "eventCategory": "AdjustmentEventList",
+        "lineType": "FBAInventoryReimbursement",
+        "amount": 45,
+        "currency": "USD",
+        "postedDate": "2026-07-06T10:30:00.000Z",
+        "sellerSKU": "BUNDLE-005"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "666-7890123-4567890",
+    "expectedRevenue": 21.24,
+    "actualSettled": 15.52,
+    "discrepancy": -5.72,
+    "flags": [],
+    "flagMessages": [],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-06-17T08:30:00.000Z:666-7890123-4567890:Principal:0",
+        "orderId": "666-7890123-4567890",
+        "sellerSKU": "STARTER-006",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 24.99,
+        "currency": "USD",
+        "postedDate": "2026-06-17T08:30:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-17T08:30:00.000Z:666-7890123-4567890:Commission:0",
+        "orderId": "666-7890123-4567890",
+        "sellerSKU": "STARTER-006",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -3.75,
+        "currency": "USD",
+        "postedDate": "2026-06-17T08:30:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-17T08:30:00.000Z:666-7890123-4567890:FBAPerUnitFulfillmentFee:1",
+        "orderId": "666-7890123-4567890",
+        "sellerSKU": "STARTER-006",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -3.22,
+        "currency": "USD",
+        "postedDate": "2026-06-17T08:30:00.000Z"
+      },
+      {
+        "eventId": "ServiceFeeEventList:2026-06-16T00:00:00.000Z:666-7890123-4567890:CouponRedemptionFee:0",
+        "orderId": "666-7890123-4567890",
+        "eventCategory": "ServiceFeeEventList",
+        "lineType": "CouponRedemptionFee",
+        "amount": -2.5,
+        "currency": "USD",
+        "postedDate": "2026-06-16T00:00:00.000Z"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "777-8901234-5678901",
+    "expectedRevenue": 91.79,
+    "actualSettled": 1.85,
+    "discrepancy": -89.94,
+    "flags": [
+      "shortpay"
+    ],
+    "flagMessages": [
+      "Underpaid by $99.99"
+    ],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-06-22T13:00:00.000Z:777-8901234-5678901:Principal:0",
+        "orderId": "777-8901234-5678901",
+        "sellerSKU": "DELUXE-007",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 79.99,
+        "currency": "USD",
+        "postedDate": "2026-06-22T13:00:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-22T13:00:00.000Z:777-8901234-5678901:Tax:1",
+        "orderId": "777-8901234-5678901",
+        "sellerSKU": "DELUXE-007",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Tax",
+        "amount": 6.8,
+        "currency": "USD",
+        "postedDate": "2026-06-22T13:00:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-22T13:00:00.000Z:777-8901234-5678901:Commission:0",
+        "orderId": "777-8901234-5678901",
+        "sellerSKU": "DELUXE-007",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -12,
+        "currency": "USD",
+        "postedDate": "2026-06-22T13:00:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-22T13:00:00.000Z:777-8901234-5678901:FBAPerUnitFulfillmentFee:1",
+        "orderId": "777-8901234-5678901",
+        "sellerSKU": "DELUXE-007",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -4.95,
+        "currency": "USD",
+        "postedDate": "2026-06-22T13:00:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-24T09:30:00.000Z:777-8901234-5678901:Principal:0",
+        "orderId": "777-8901234-5678901",
+        "sellerSKU": "DELUXE-007",
+        "eventCategory": "RefundEventList",
+        "lineType": "Principal",
+        "amount": -79.99,
+        "currency": "USD",
+        "postedDate": "2026-06-24T09:30:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-06-24T09:30:00.000Z:777-8901234-5678901:Commission:0",
+        "orderId": "777-8901234-5678901",
+        "sellerSKU": "DELUXE-007",
+        "eventCategory": "RefundEventList",
+        "lineType": "Commission",
+        "amount": 12,
+        "currency": "USD",
+        "postedDate": "2026-06-24T09:30:00.000Z"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "888-9012345-6789012",
+    "expectedRevenue": 33.98,
+    "actualSettled": -11.1,
+    "discrepancy": -45.08,
+    "flags": [],
+    "flagMessages": [],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-06-27T10:45:00.000Z:888-9012345-6789012:Principal:0",
+        "orderId": "888-9012345-6789012",
+        "sellerSKU": "VALUE-PACK-008",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 39.98,
+        "currency": "USD",
+        "postedDate": "2026-06-27T10:45:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-27T10:45:00.000Z:888-9012345-6789012:Commission:0",
+        "orderId": "888-9012345-6789012",
+        "sellerSKU": "VALUE-PACK-008",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -6,
+        "currency": "USD",
+        "postedDate": "2026-06-27T10:45:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-06-27T10:45:00.000Z:888-9012345-6789012:FBAPerUnitFulfillmentFee:1",
+        "orderId": "888-9012345-6789012",
+        "sellerSKU": "VALUE-PACK-008",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -5.1,
+        "currency": "USD",
+        "postedDate": "2026-06-27T10:45:00.000Z"
+      },
+      {
+        "eventId": "ChargebackEventList:2026-06-29T10:00:00.000Z:888-9012345-6789012:Chargeback:0",
+        "orderId": "888-9012345-6789012",
+        "eventCategory": "ChargebackEventList",
+        "lineType": "Chargeback",
+        "amount": -39.98,
+        "currency": "USD",
+        "postedDate": "2026-06-29T10:00:00.000Z"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "999-0123456-7890123",
+    "expectedRevenue": 254.99,
+    "actualSettled": 120.25,
+    "discrepancy": -134.74,
+    "flags": [
+      "shortpay"
+    ],
+    "flagMessages": [
+      "Underpaid by $149.99"
+    ],
+    "financeLines": [
+      {
+        "eventId": "ShipmentEventList:2026-07-02T15:30:00.000Z:999-0123456-7890123:Principal:0",
+        "orderId": "999-0123456-7890123",
+        "sellerSKU": "PRO-MAX-009",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Principal",
+        "amount": 299.99,
+        "currency": "USD",
+        "postedDate": "2026-07-02T15:30:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-07-02T15:30:00.000Z:999-0123456-7890123:Commission:0",
+        "orderId": "999-0123456-7890123",
+        "sellerSKU": "PRO-MAX-009",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "Commission",
+        "amount": -45,
+        "currency": "USD",
+        "postedDate": "2026-07-02T15:30:00.000Z"
+      },
+      {
+        "eventId": "ShipmentEventList:2026-07-02T15:30:00.000Z:999-0123456-7890123:FBAPerUnitFulfillmentFee:1",
+        "orderId": "999-0123456-7890123",
+        "sellerSKU": "PRO-MAX-009",
+        "eventCategory": "ShipmentEventList",
+        "lineType": "FBAPerUnitFulfillmentFee",
+        "amount": -7.25,
+        "currency": "USD",
+        "postedDate": "2026-07-02T15:30:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-07-04T16:00:00.000Z:999-0123456-7890123:Principal:0",
+        "orderId": "999-0123456-7890123",
+        "sellerSKU": "PRO-MAX-009",
+        "eventCategory": "RefundEventList",
+        "lineType": "Principal",
+        "amount": -149.99,
+        "currency": "USD",
+        "postedDate": "2026-07-04T16:00:00.000Z"
+      },
+      {
+        "eventId": "RefundEventList:2026-07-04T16:00:00.000Z:999-0123456-7890123:Commission:0",
+        "orderId": "999-0123456-7890123",
+        "sellerSKU": "PRO-MAX-009",
+        "eventCategory": "RefundEventList",
+        "lineType": "Commission",
+        "amount": 22.5,
+        "currency": "USD",
+        "postedDate": "2026-07-04T16:00:00.000Z"
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "orderId": "200-1111111-1111111",
+    "expectedRevenue": 50.99,
+    "actualSettled": 0,
+    "discrepancy": -50.99,
+    "flags": [
+      "no_settlement"
+    ],
+    "flagMessages": [
+      "Never settled"
+    ],
+    "financeLines": [],
+    "warnings": []
+  },
+  {
+    "orderId": "201-2222222-2222222",
+    "expectedRevenue": 29.33,
+    "actualSettled": 0,
+    "discrepancy": -29.33,
+    "flags": [
+      "no_settlement"
+    ],
+    "flagMessages": [
+      "Never settled"
+    ],
+    "financeLines": [],
+    "warnings": []
+  }
+]

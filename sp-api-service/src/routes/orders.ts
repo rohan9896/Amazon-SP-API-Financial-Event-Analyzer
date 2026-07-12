@@ -84,7 +84,9 @@ ordersRoutes.get('/v0/orders', (c) => {
     return c.json(unauthorized(), 403);
   }
 
-  if (!checkRateLimit()) {
+  const rateLimit = checkRateLimit();
+  if (!rateLimit.allowed) {
+    c.header('Retry-After', String(Math.max(1, Math.ceil(rateLimit.retryAfterMs / 1000))));
     return c.json(tooManyRequests(), 429);
   }
 
@@ -136,7 +138,9 @@ ordersRoutes.get('/v0/orders/:orderId/orderItems', (c) => {
     return c.json(unauthorized(), 403);
   }
 
-  if (!checkRateLimit()) {
+  const rateLimit = checkRateLimit();
+  if (!rateLimit.allowed) {
+    c.header('Retry-After', String(Math.max(1, Math.ceil(rateLimit.retryAfterMs / 1000))));
     return c.json(tooManyRequests(), 429);
   }
 

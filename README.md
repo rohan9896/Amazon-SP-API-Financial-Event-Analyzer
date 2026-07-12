@@ -85,12 +85,14 @@ Typical users could include:
 
 ## Product Architecture
 
-The project is split into two small services.
+The project is split into three services.
 
 ```text
 Mock SP-API Service
    ↓
-Analyzer Backend
+Reconciliation Engine
+   ↓
+Analyzer Backend (future)
    ↓
 Database
    ↓
@@ -105,7 +107,18 @@ The mock service behaves like a simplified Amazon SP-API provider.
 
 It exposes Amazon-style endpoints for orders and financial events, while also simulating real integration concerns such as token auth, pagination, throttling, and occasional failures.
 
-### 2. Analyzer Application
+### 2. Reconciliation Engine
+
+The reconciliation engine (`reconciliation-engine/`) compares expected order revenue against actual settled amounts and flags discrepancies (`shortpay`, `no_settlement`). It consumes the mock SP-API service via a thin HTTP client, but the core `reconcile()` function is a pure module with no API dependency — runnable and unit-testable without any network.
+
+```bash
+cd reconciliation-engine
+pnpm reconcile   # fetches from mock SP-API, prints JSON report
+```
+
+See [`reconciliation-engine/README.md`](reconciliation-engine/README.md) for assumptions, config, and API reference.
+
+### 3. Analyzer Application
 
 The analyzer application consumes the mock SP-API service, stores raw and normalized financial events, detects suspicious deductions, and generates AI explanations.
 
@@ -247,7 +260,8 @@ The MVP focuses on the most important workflow: consuming an SP-API-style servic
 
 ### Included in MVP
 
-- Mock SP-API service
+- Mock SP-API service (Orders + Finances + Auth)
+- Reconciliation engine (expected vs actual, shortpay + no_settlement flags)
 - OAuth-style token endpoint
 - Token validation middleware
 - Paginated financial events endpoint
@@ -266,7 +280,6 @@ The MVP focuses on the most important workflow: consuming an SP-API-style servic
 - Real Amazon SP-API integration
 - Real Seller Central authorization
 - Production app approval
-- Full reconciliation engine
 - Multi-seller support
 - Full settlement report ingestion
 - Production-grade accounting logic
@@ -530,7 +543,7 @@ Possible next steps:
 - Implement async report request and polling
 - Add idempotent scheduled sync
 - Add multi-marketplace support
-- Add full expected-vs-actual payout reconciliation
+- Add `unexplained_fee` and `missing_reimbursement` reconciliation rules (phase 2)
 - Generate dispute packet drafts
 - Add export to CSV
 
