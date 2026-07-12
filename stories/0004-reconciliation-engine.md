@@ -126,9 +126,9 @@ This avoids false positives from FBA fees on otherwise-clean orders (e.g. order 
 ```json
 {
   "orderId": "444-5678901-2345678",
-  "expectedRevenue": 101.98,
-  "actualSettled": 20.97,
-  "discrepancy": -81.01,
+  "expectedRevenue": 101.97,
+  "actualSettled": -9.00,
+  "discrepancy": -110.97,
   "flags": ["shortpay"],
   "flagMessages": ["Underpaid by $90.00"],
   "financeLines": [ "...itemized..." ],

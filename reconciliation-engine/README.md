@@ -47,6 +47,8 @@ pnpm reconcile -- --output report.json
 | `COMMISSION_RATE` | `0.15` | Flat referral fee assumption |
 | `SHORTPAY_TOLERANCE` | `0.50` | Min principal gap to flag shortpay |
 | `CREATED_AFTER` | `2020-01-01T00:00:00Z` | Order fetch date range |
+| `GEMINI_API_KEY` | *(none)* | Google Gemini key for `pnpm explain`. Kept separate from SP-API creds |
+| `GEMINI_MODEL` | `gemini-3.1-flash-lite` | Gemini model used for seller explanations |
 
 ## Core API
 
@@ -67,9 +69,9 @@ const report = reconcile(orders, financeLines, {
 ```json
 {
   "orderId": "444-5678901-2345678",
-  "expectedRevenue": 101.98,
-  "actualSettled": 20.97,
-  "discrepancy": -81.01,
+  "expectedRevenue": 101.97,
+  "actualSettled": -9.00,
+  "discrepancy": -110.97,
   "flags": ["shortpay"],
   "flagMessages": ["Underpaid by $90.00"],
   "financeLines": [],
@@ -111,4 +113,18 @@ pnpm test:watch
 | `pnpm build` | Compile TypeScript |
 | `pnpm test` | Run Vitest unit tests |
 | `pnpm reconcile` | Fetch from mock API and print report |
+| `pnpm explain` | Narrate flagged orders from a report via Gemini (needs `GEMINI_API_KEY`) |
 | `pnpm lint` | ESLint |
+
+## Seller explanations (LLM layer)
+
+`pnpm explain` turns reconciliation records into plain-English, seller-facing explanations using Google **Gemini 3.1 Flash-Lite**. The LLM only narrates numbers `reconcile()` already produced — it never does its own math. There is **no fallback**: a missing key or any API/parse failure surfaces an error and exits non-zero.
+
+```bash
+pnpm reconcile -- --output report.json         # produce a report first
+pnpm explain                                   # explain flagged orders
+pnpm explain -- --order 444-5678901-2345678    # explain one order
+pnpm explain -- --all --output explanations.json
+```
+
+See [../docs/RECONCILIATION-FLOW.md](../docs/RECONCILIATION-FLOW.md) section 9 for the full flow.

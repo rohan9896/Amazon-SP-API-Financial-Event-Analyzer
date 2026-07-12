@@ -1,0 +1,116 @@
+[
+  {
+    "orderId": "222-3456789-0123456",
+    "headline": "Payment discrepancy found for order 222-3456789-0123456",
+    "summary": "Your order 222-3456789-0123456 shows a total discrepancy of -53.43, with an actual settlement of -10.95 against an expected revenue of 42.48.",
+    "reason": "The order has been flagged for a shortpay, specifically indicating that the product principal was underpaid by 24.99.",
+    "evidence": [
+      "Shipment Principal: 49.98",
+      "Refund Principal: -24.99",
+      "MiscAdjustment: -22",
+      "Commission and Fulfillment Fees: -7.5, -6.2, and 3.75",
+      "ShippingChargeback: -3.99"
+    ],
+    "recommendedAction": "Please review the transaction details in your Seller Central reports. If the MiscAdjustment of -22 or the principal shortpay of 24.99 appear incorrect, you may want to open a case with Amazon Seller Support for clarification.",
+    "confidence": "high"
+  },
+  {
+    "orderId": "333-4567890-1234567",
+    "headline": "Payment reconciliation issue for order 333-4567890-1234567",
+    "summary": "Your order 333-4567890-1234567 shows a total discrepancy of -297.28 compared to your expected revenue of 140.24.",
+    "reason": "The order is flagged for a shortpay, specifically indicating that the product principal was underpaid by 149.99.",
+    "evidence": [
+      "The order settled at -157.04 total.",
+      "A GuaranteeClaimEventList entry shows a deduction of -149.99.",
+      "The ShipmentEventList shows a Principal of 149.99, which was offset by a RefundEventList Principal of -149.99."
+    ],
+    "recommendedAction": "Please review the Guarantee Claim details in your Seller Central reports. If you believe the claim deduction was processed in error, you may want to open a case with Amazon Seller Support to request a review.",
+    "confidence": "high"
+  },
+  {
+    "orderId": "444-5678901-2345678",
+    "headline": "Payment discrepancy detected for order 444-5678901-2345678",
+    "summary": "Your order resulted in a total discrepancy of -110.97 compared to your expected revenue of 101.97.",
+    "reason": "This order is flagged for a shortpay, meaning the principal amount settled was lower than expected. Specifically, you were underpaid by 90.00 regarding the product principal.",
+    "evidence": [
+      "Expected revenue was 101.97, but the actual settled amount was -9.",
+      "A Chargeback event of -29.97 was applied to this order.",
+      "The principal amount for SKU ACCESSORY-004 was 29.97, offset by commission and fulfillment fees of -4.5 each."
+    ],
+    "recommendedAction": "Please review the chargeback details in your Seller Central reports. If you believe the chargeback or the shortpay is incorrect, you may want to open a case with Amazon Seller Support for further investigation.",
+    "confidence": "high"
+  },
+  {
+    "orderId": "555-6789012-3456789",
+    "headline": "Payment discrepancy detected for order 555-6789012-3456789",
+    "summary": "Your order shows a total discrepancy of -156.02, with a specific shortpay alert indicating an underpayment of 214.99 on the product principal.",
+    "reason": "The order experienced a full refund of the original 199.99 principal, and while you received a 45.00 FBA inventory reimbursement, the final settled amount of 28.00 is significantly lower than your expected revenue of 184.02.",
+    "evidence": [
+      "Expected revenue was 184.02, but the actual settled amount was 28.00.",
+      "The principal was refunded in full (-199.99), while the FBA inventory reimbursement was 45.00.",
+      "A shortpay flag was triggered with a principal gap of 214.99."
+    ],
+    "recommendedAction": "Please review the refund and reimbursement details in your Seller Central transaction report. If the inventory reimbursement amount seems incorrect, you may want to open a case with Amazon Seller Support for further investigation.",
+    "confidence": "high"
+  },
+  {
+    "orderId": "777-8901234-5678901",
+    "headline": "Payment Discrepancy Found for Order 777-8901234-5678901",
+    "summary": "Your order resulted in a net settlement of $1.85, which is $89.94 less than the expected revenue of $91.79.",
+    "reason": "This order has been flagged for a shortpay, indicating that the principal amount settled was lower than expected. Specifically, the system reports an underpayment of $99.99 regarding the principal.",
+    "evidence": [
+      "Expected Revenue: $91.79",
+      "Actual Settled: $1.85",
+      "Total Discrepancy: -$89.94",
+      "Principal (Shipment): $79.99",
+      "Principal (Refund): -$79.99",
+      "Commission (Shipment): -$12.00",
+      "Commission (Refund): $12.00",
+      "Tax: $6.80",
+      "FBA Fulfillment Fee: -$4.95"
+    ],
+    "recommendedAction": "Please review the refund details for this order in your Seller Central reports. If you believe the principal was incorrectly deducted, you may want to open a case with Amazon Seller Support for further investigation.",
+    "confidence": "high"
+  },
+  {
+    "orderId": "999-0123456-7890123",
+    "headline": "Payment discrepancy found for order 999-0123456-7890123",
+    "summary": "Your order settled for $120.25, which is $134.74 less than the expected revenue of $254.99.",
+    "reason": "The order is flagged for a shortpay because the product principal was reduced by a refund event.",
+    "evidence": [
+      "Initial Principal: $299.99",
+      "Refund Principal: -$149.99",
+      "Commission: -$45.00",
+      "FBA Fulfillment Fee: -$7.25",
+      "Refund Commission Credit: $22.50"
+    ],
+    "recommendedAction": "Please review the refund details in your Seller Central transaction report. If you believe the refund was processed incorrectly, you may want to open a case with Amazon Seller Support.",
+    "confidence": "high"
+  },
+  {
+    "orderId": "200-1111111-1111111",
+    "headline": "Order 200-1111111-1111111 has not been paid",
+    "summary": "We found that this order has not yet settled in your Amazon account.",
+    "reason": "The order shows a status of no_settlement, meaning no financial events have been recorded for this transaction.",
+    "evidence": [
+      "Expected revenue was 50.99",
+      "Actual amount settled is 0",
+      "Total discrepancy is -50.99"
+    ],
+    "recommendedAction": "Please verify the order status in Seller Central. If the order has already shipped and should have been paid, you may want to open a case with Amazon Seller Support for further investigation.",
+    "confidence": "high"
+  },
+  {
+    "orderId": "201-2222222-2222222",
+    "headline": "Order 201-2222222-2222222 has not been paid",
+    "summary": "We checked your records for this order and found that it has not yet been settled by Amazon.",
+    "reason": "The order shows a status of 'no_settlement', meaning no financial events have been recorded for this transaction.",
+    "evidence": [
+      "Expected revenue: 29.33",
+      "Actual amount settled: 0",
+      "Total discrepancy: -29.33"
+    ],
+    "recommendedAction": "Please verify the order status in Seller Central. If the order has already shipped, you may want to open a case with Amazon Seller Support to investigate why the payment has not been processed.",
+    "confidence": "high"
+  }
+]

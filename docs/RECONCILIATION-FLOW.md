@@ -17,6 +17,8 @@ This repo has **two independent pieces**:
 
 They are deliberately decoupled: the engine's core doesn't know or care whether data came from the mock or the real Amazon API.
 
+On top of these sits an **optional LLM explanation layer** (Google Gemini) that turns each machine-readable reconciliation record into a plain-English explanation a seller can actually read. It never changes the math — it only narrates numbers the engine already produced. See [Section 9](#9-seller-explanations-llm-layer).
+
 ---
 
 ## 2. Glossary — every term you need
@@ -302,7 +304,71 @@ Every reconciled (Shipped) order produces one record:
 
 ---
 
-## 9. Worked examples (from the real seed data)
+## 9. Seller explanations (LLM layer)
+
+The record above is precise but technical. Most sellers don't want to read `discrepancy: -110.97` — they want a sentence. The **explanation layer** takes a finished `ReconciliationRecord` and asks **Google Gemini 3.1 Flash-Lite** to narrate it in plain English.
+
+### The golden rule: the LLM never does math
+
+The engine is the single source of truth for every number. The LLM is handed the *already-computed* figures and is explicitly instructed **not to recalculate or invent amounts** — only to explain what's there. This keeps the output trustworthy: if someone checks the math in a demo, it always traces back to `reconcile()`, not the model.
+
+```mermaid
+flowchart TD
+    record["ReconciliationRecord"] --> ctx["buildExplanationContext()<br/>compact, safe prompt"]
+    ctx --> client["GeminiClient"]
+    client --> gemini["Gemini 3.1 Flash-Lite<br/>structured JSON output"]
+    gemini -->|"success"| parse["Zod-validate → SellerExplanation"]
+    gemini -->|"missing key / API error"| err["throw → CLI prints error, exit 1"]
+```
+
+### How it works
+
+1. **Context builder** (`explain/context.ts`) trims the record down to only what's needed — `expectedRevenue`, `actualSettled`, `discrepancy`, `flags`, `flagMessages`, summarized finance lines, warnings — and pairs it with a system prompt that defines the terms (including the `discrepancy` vs. principal-level `shortpay` distinction) and forbids arithmetic. No credentials or env values are ever sent.
+2. **Gemini client** (`explain/gemini-client.ts`) calls the `generateContent` REST endpoint requesting **structured JSON output** (a fixed response schema), then validates the reply with Zod.
+3. **Orchestration** (`explain/explain.ts`) attaches the `orderId` and returns a `SellerExplanation`.
+
+### Structured output shape
+
+```json
+{
+  "orderId": "444-5678901-2345678",
+  "headline": "Underpaid by $90.00 on product principal",
+  "summary": "You expected about $101.97 for this order, but the settlement came to -$9.00...",
+  "reason": "The shipment principal settled at $29.97 versus an expected $119.97.",
+  "evidence": ["Principal $29.97", "Commission -$4.50"],
+  "recommendedAction": "Open a case with Amazon citing the $90.00 principal shortfall.",
+  "confidence": "high"
+}
+```
+
+### No fallback — fail loudly
+
+There is **no templated/mock fallback**. If `GEMINI_API_KEY` is missing, or the API call fails (network, quota, 4xx/5xx), or the response can't be parsed/validated, the tool prints a clear error and exits non-zero. A confidently-wrong explanation is worse than an honest error.
+
+### Cost & model
+
+| | |
+|---|---|
+| Model | `gemini-3.1-flash-lite` (configurable via `GEMINI_MODEL`) |
+| Price | ~$0.25 / 1M input tokens, ~$1.50 / 1M output tokens |
+| Why this one | Cheapest current Flash-Lite tier available to new API keys |
+
+### Running it
+
+```bash
+cd reconciliation-engine
+# GEMINI_API_KEY must be set in .env (kept separate from SP-API creds)
+pnpm reconcile -- --output report.json    # produce the report first
+pnpm explain                              # explain flagged orders in report.json
+pnpm explain -- --order 444-5678901-2345678   # explain one order
+pnpm explain -- --all --output explanations.json   # explain every order, write to file
+```
+
+By default only **flagged** orders are explained (that's what a seller cares about); `--all` includes clean orders too.
+
+---
+
+## 10. Worked examples (from the real seed data)
 
 ### A clean order — no flag
 Product $46.48 expected, Amazon settles Principal + normal commission/FBA fees so `actualSettled ≈ expectedRevenue`. `discrepancy` is within tolerance, no Principal gap → **no flags**.
@@ -321,7 +387,7 @@ An order returned by the Orders API whose `orderId`/SKUs match **nothing** in th
 
 ---
 
-## 10. Edge cases & assumptions (know these before a demo)
+## 11. Edge cases & assumptions (know these before a demo)
 
 - **Flat 15% commission** — not category-specific. Documented simplification.
 - **Principal-level shortpay** — deliberately narrower than the whole discrepancy, to avoid false positives from legitimate fees. Fee/chargeback-driven losses (e.g. orders `666`, `888`) show a negative `discrepancy` but are **not** shortpay, because their loss isn't in the Principal lines. Those are Phase-2 territory (`unexplained_fee`).
@@ -335,7 +401,7 @@ An order returned by the Orders API whose `orderId`/SKUs match **nothing** in th
 
 ---
 
-## 11. How to run it end-to-end
+## 12. How to run it end-to-end
 
 ```bash
 # Terminal 1 — start the mock Amazon API
@@ -347,13 +413,16 @@ cd reconciliation-engine
 cp .env.example .env         # reuses the same mock credentials
 pnpm reconcile               # prints the report to stdout
 pnpm reconcile -- --output report.json   # or write it to a file
+
+# Optional — narrate flagged orders in plain English (needs GEMINI_API_KEY)
+pnpm explain                 # explains flagged orders from report.json
 ```
 
 Run just the pure logic (no server needed):
 
 ```bash
 cd reconciliation-engine
-pnpm test                    # unit tests exercise reconcile() directly
+pnpm test                    # unit tests exercise reconcile() and the explain layer
 ```
 
 ### Configuration knobs (`.env`)
@@ -365,10 +434,12 @@ pnpm test                    # unit tests exercise reconcile() directly
 | `COMMISSION_RATE` | `0.15` | Flat referral-fee assumption |
 | `SHORTPAY_TOLERANCE` | `0.50` | Minimum principal gap (in $) before flagging shortpay |
 | `CREATED_AFTER` | `2020-01-01T00:00:00Z` | Order fetch start date |
+| `GEMINI_API_KEY` | *(none)* | Google Gemini key for the explanation layer. Kept separate from SP-API creds; only needed for `pnpm explain` |
+| `GEMINI_MODEL` | `gemini-3.1-flash-lite` | Which Gemini model the explanation layer uses |
 
 ---
 
-## 12. Where things live (quick map)
+## 13. Where things live (quick map)
 
 | Concern | File |
 |---|---|
@@ -382,5 +453,10 @@ pnpm test                    # unit tests exercise reconcile() directly
 | Types & defaults (15%, $0.50, statuses) | `reconciliation-engine/src/domain/types.ts` |
 | CLI entry point (`pnpm reconcile`) | `reconciliation-engine/src/cli/run.ts` |
 | Config / env loading | `reconciliation-engine/src/lib/env.ts` |
+| LLM prompt/context builder | `reconciliation-engine/src/explain/context.ts` |
+| Gemini client (structured output) | `reconciliation-engine/src/explain/gemini-client.ts` |
+| Explanation orchestration + types | `reconciliation-engine/src/explain/explain.ts`, `explain/types.ts` |
+| Explanation CLI (`pnpm explain`) | `reconciliation-engine/src/cli/explain.ts` |
 | Mock API endpoint reference | `sp-api-service/API.md` |
-| Design decisions & rule rationale | `stories/0004-reconciliation-engine.md` |
+| Reconciliation design & rule rationale | `stories/0004-reconciliation-engine.md` |
+| LLM explanation design | `stories/0005-llm-seller-explanations.md` |

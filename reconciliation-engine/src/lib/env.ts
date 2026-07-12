@@ -23,6 +23,10 @@ const envSchema = z.object({
   COMMISSION_RATE: z.coerce.number().min(0).max(1).default(DEFAULT_RECONCILIATION_CONFIG.commissionRate),
   SHORTPAY_TOLERANCE: z.coerce.number().min(0).default(DEFAULT_RECONCILIATION_CONFIG.shortpayTolerance),
   CREATED_AFTER: z.string().default('2020-01-01T00:00:00Z'),
+  // LLM explanation layer (kept separate from SP-API credentials).
+  // Only required by the `explain` command, not by core reconciliation.
+  GEMINI_API_KEY: z.string().min(1).optional(),
+  GEMINI_MODEL: z.string().min(1).default('gemini-3.1-flash-lite'),
 });
 
 export type Env = z.infer<typeof envSchema> & {
@@ -65,4 +69,18 @@ export function toReconciliationConfig(): {
     commissionRate: env.COMMISSION_RATE,
     shortpayTolerance: env.SHORTPAY_TOLERANCE,
   };
+}
+
+/**
+ * Resolve Gemini config for the explanation layer. Throws (rather than exiting
+ * at import time) when the key is absent, since only the `explain` command needs it.
+ */
+export function requireGeminiConfig(): { apiKey: string; model: string } {
+  if (!env.GEMINI_API_KEY) {
+    throw new Error(
+      'GEMINI_API_KEY is not set. Add it to reconciliation-engine/.env to generate seller explanations.',
+    );
+  }
+
+  return { apiKey: env.GEMINI_API_KEY, model: env.GEMINI_MODEL };
 }

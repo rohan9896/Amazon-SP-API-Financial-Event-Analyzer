@@ -9,6 +9,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "reconcile": "tsx src/cli/run.ts",
+    "explain": "tsx src/cli/explain.ts",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
