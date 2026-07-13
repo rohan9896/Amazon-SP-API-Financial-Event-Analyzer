@@ -114,8 +114,12 @@ export class ApiError extends Error {
   }
 }
 
+// In dev this stays empty so Vite's proxy handles /api and /health.
+// In production set VITE_API_BASE_URL to the deployed reconciliation-api origin.
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(path, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers: {
       Accept: 'application/json',
