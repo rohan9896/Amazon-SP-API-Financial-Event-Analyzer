@@ -3,7 +3,9 @@
 FROM node:22-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+# Pin pnpm to match the lockfile; newer pnpm enforces a minimumReleaseAge
+# supply-chain policy that rejects freshly published deps.
+RUN corepack enable && corepack prepare pnpm@10.24.0 --activate
 WORKDIR /app
 
 FROM base AS build
