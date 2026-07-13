@@ -5,3 +5,18 @@ services:
       - '${PORT:-3000}:3000'
     env_file:
       - .env
+
+  reconciliation-api:
+    build:
+      # Monorepo root context — reconciliation-api depends on reconciliation-engine.
+      context: ..
+      dockerfile: reconciliation-api/Dockerfile
+    ports:
+      - '${API_PORT:-4000}:4000'
+    env_file:
+      - ../reconciliation-api/.env
+    environment:
+      # Reach the mock SP-API over the compose network instead of localhost.
+      SP_API_BASE_URL: http://sp-api-service:3000
+    depends_on:
+      - sp-api-service
